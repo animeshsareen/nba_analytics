@@ -1,0 +1,5 @@
+source_row,date,opponent,location,result,minutes,pts,reb,ast,stl,blk,tov,fg3,rejection_reason
+20,2025-01-11,CHI,,L (-3),38:00,31,10,8,0,1,4,5,duplicate
+21,2025-02-26,BOS,,L (-8),Did Not Play,,,,,,,,did_not_play
+22,not-a-date,BOS,,L (-8),29:30,unknown,4,7,0,0,1,2,invalid_game
+23,date,opponent,location,result,minutes,pts,reb,ast,stl,blk,tov,fg3,repeated_header

@@ -1,0 +1,26 @@
+{
+  "label": "Demo Guard",
+  "source_kind": "synthetic",
+  "source_sha256": "3fbbc4293108d5bd010b62e962e3e243bc0d52b74ae357c6d08066f594641d5c",
+  "quality": {
+    "input_rows": 22,
+    "valid_games": 18,
+    "repeated_header": 1,
+    "did_not_play": 1,
+    "invalid_game": 1,
+    "duplicate": 1
+  },
+  "summary": {
+    "games": 18,
+    "date_start": "2025-01-02",
+    "date_end": "2025-02-22",
+    "points_per_game": 24.5,
+    "rebounds_per_game": 5.83,
+    "assists_per_game": 7.83,
+    "minutes_per_game": 33.02,
+    "double_doubles": 9,
+    "triple_doubles": 0
+  },
+  "stat": "pts",
+  "reference_line": 25.0
+}

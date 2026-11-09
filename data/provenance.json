@@ -1,0 +1,7 @@
+{
+  "kind": "synthetic",
+  "label": "Demo Guard",
+  "rows": 22,
+  "description": "Invented values for software demonstration; no real player or season. Includes one duplicate, one DNP row, one invalid row, and one repeated header.",
+  "sha256": "3fbbc4293108d5bd010b62e962e3e243bc0d52b74ae357c6d08066f594641d5c"
+}
