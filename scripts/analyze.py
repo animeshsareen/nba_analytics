@@ -12,6 +12,36 @@ from clean import clean_games
 from metrics import summarize, opponent_summary
 
 
+def render_report(label, source_kind, summary, quality, charts):
+    """Render the self-contained report from already-computed analysis results."""
+    plots = [
+        figure.to_html(
+            full_html=False,
+            include_plotlyjs=index == 0,
+            div_id=name,
+            config={"responsive": True, "displaylogo": False},
+        )
+        for index, (name, figure) in enumerate(charts.items())
+    ]
+    disclosure = (
+        "SYNTHETIC DEMO — invented data, not an actual NBA player or season."
+        if source_kind == "synthetic"
+        else "Analysis of user-provided player game logs."
+    )
+    return f"""<!doctype html><html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{html.escape(label)} · NBA Analytics</title>
+<style>body{{font:16px/1.6 system-ui,sans-serif;color:#18304b;max-width:1150px;margin:40px auto;padding:0 20px}}h1{{font-size:36px}}.notice{{background:#edf4ff;padding:14px}}a{{color:#1262c4}}</style>
+</head><body><h1>{html.escape(label)}</h1><p class="notice">{disclosure}</p>
+<p>{summary["games"]} played games · {summary["points_per_game"]} points/game · {summary["assists_per_game"]} assists/game</p>
+<p>Click an opponent in the legend to hide it; double-click to isolate it. Hover for details, drag to zoom, and double-click the plot to reset.</p>
+{"".join(plots)}
+<h2>Data quality</h2><pre>{html.escape(json.dumps(quality, indent=2))}</pre>
+<p><a href="clean_games.csv">Clean games</a> · <a href="rejected_rows.csv">Excluded rows</a> · <a href="opponent_summary.csv">Opponent summary</a> · <a href="summary.json">Run manifest</a></p>
+<p>Opponent means describe this sample and are not causal effects. The trailing average includes the current game and starts at game five. Reference lines are visual guides, not predictions. The report bundles Plotly and works offline.</p>
+</body></html>"""
+
+
 def analyze(source, output, label, source_kind, stat="pts", line=None):
     source, output = Path(source), Path(output)
     if source_kind not in {"synthetic", "user"}:
@@ -38,34 +68,9 @@ def analyze(source, output, label, source_kind, stat="pts", line=None):
         "reference_line": line,
     }
     (output / "summary.json").write_text(json.dumps(metadata, indent=2) + "\n")
-    plots = []
-    for i, (name, figure) in enumerate(charts.items()):
-        plots.append(
-            figure.to_html(
-                full_html=False,
-                include_plotlyjs=True if i == 0 else False,
-                div_id=name,
-                config={"responsive": True, "displaylogo": False},
-            )
-        )
-    disclosure = (
-        "SYNTHETIC DEMO — invented data, not an actual NBA player or season."
-        if source_kind == "synthetic"
-        else "Analysis of user-provided player game logs."
+    (output / "index.html").write_text(
+        render_report(label, source_kind, summary, result.quality, charts), encoding="utf-8"
     )
-    page = f"""<!doctype html><html lang="en"><head><meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>{html.escape(label)} · NBA Analytics</title>
-<style>body{{font:16px/1.6 system-ui,sans-serif;color:#18304b;max-width:1150px;margin:40px auto;padding:0 20px}}h1{{font-size:36px}}.notice{{background:#edf4ff;padding:14px}}a{{color:#1262c4}}</style>
-</head><body><h1>{html.escape(label)}</h1><p class="notice">{disclosure}</p>
-<p>{summary["games"]} played games · {summary["points_per_game"]} points/game · {summary["assists_per_game"]} assists/game</p>
-<p>Click an opponent in the legend to hide it; double-click to isolate it. Hover for details, drag to zoom, and double-click the plot to reset.</p>
-{"".join(plots)}
-<h2>Data quality</h2><pre>{html.escape(json.dumps(result.quality, indent=2))}</pre>
-<p><a href="clean_games.csv">Clean games</a> · <a href="rejected_rows.csv">Excluded rows</a> · <a href="opponent_summary.csv">Opponent summary</a> · <a href="summary.json">Run manifest</a></p>
-<p>Opponent means describe this sample and are not causal effects. The trailing average includes the current game and starts at game five. Reference lines are visual guides, not predictions. The report bundles Plotly and works offline.</p>
-</body></html>"""
-    (output / "index.html").write_text(page, encoding="utf-8")
     return metadata
 
 
