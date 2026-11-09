@@ -23,8 +23,6 @@ python scripts/scrape.py --player curryst01 --start 2023 --end 2025 \
 
 The scraper fetches each requested regular season (excluding the separate playoff table), parses table cells by `data-stat` name, and combines the logs into a CSV with player ID, season, and source URL. It also handles tables embedded in HTML comments. Requests have a timeout and a minimum three-second interval. Any failed season aborts the run rather than saving a silently incomplete dataset.
 
-**Live smoke-tested November 9, 2026:** Curry’s 2023–2025 regular-season pages produced 246 rows: 200 played games and 46 DNPs, with no invalid games. Source availability can change; the script surfaces denied requests and changed table formats without bypassing them. Check the source's [data-use rules](https://www.sports-reference.com/data_use.html). You can also parse an authorized saved page:
-
 ```bash
 python scripts/scrape.py --html data/local/player.html --output data/local/player.csv
 ```
