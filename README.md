@@ -1,6 +1,6 @@
 # NBA Analytics
 
-Scrape a player's season game logs, clean them with pandas, and explore performance in interactive Plotly charts. Refactored from the collection → ETL → Plotly workflow in `animeshsareen/nba_scraper`.
+Scrape a player's season game logs, clean them with pandas, and explore performance in interactive Plotly charts.
 
 ## Setup
 
